@@ -62,7 +62,7 @@ express()
         updateSql = `UPDATE buttons
           SET count = count + 1
           WHERE id = $1
-          RETURNING count as new_count`;
+          RETURNING name as new_name, count as new_count`;
       }
 
       const update = await client.query(updateSql, [id]);

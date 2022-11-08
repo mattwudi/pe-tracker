@@ -10,11 +10,14 @@
     <button id="<%= b.id %>" onclick="javascript:send(<%= b.id %>);">
       <%= b.name %>
     </button>
-    <h3><%= b.count %></h3>
+    <h3 id="<%= b.name %>"><%= b.count %></h3>
   <% }); %>
   <button id="reset" onclick="javascript:send(3)">Reset</button>
+  <p id="output"></p>
   <script>
-    const output = document.getElementById("output");
+    const output = document.getElementById("output")
+    const critique = document.getElementById("Critique");
+    const praise = document.getElementById("Praise");
     const send = async function(buttonId) {
       const response = await fetch("/log", {
         method: "POST",
@@ -32,6 +35,15 @@
       }
       else {
         console.log(result);
+        if (result.buttonId == 3) {
+          output.innerHTML = 'Your counts have been reset.';
+          critique.innerHTML = `${result.newCount.new_count}`;
+          praise.innerHTML = `${result.newCount.new_count}`;
+        } else if (result.buttonId == 2) {
+          critique.innerHTML = `${result.newCount.new_count}`;
+        } else {
+          praise.innerHTML = `${result.newCount.new_count}`;
+        }
       }
     };
   </script>
