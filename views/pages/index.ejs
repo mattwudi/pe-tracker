@@ -5,12 +5,14 @@
   <meta charset="UTF-8">
 </head>
 <body>
-  <h1>Hello World!</h1>
+  <h1>Welcome to PE-Tracker</h1>
   <% buttons.forEach(function(b) { %>
     <button id="<%= b.id %>" onclick="javascript:send(<%= b.id %>);">
       <%= b.name %>
     </button>
+    <h3><%= b.count %></h3>
   <% }); %>
+  <button id="reset" onclick="javascript:send(3)">Reset</button>
   <p id="output"></p>
   <script>
     const output = document.getElementById("output");
@@ -31,7 +33,7 @@
       }
       else {
         console.log(result);
-        output.innerHTML = `Created button ${result.newId.new_id} at ${result.when.localtime}. Refresh to view them all!`;
+        output.innerHTML = `Count: ${result.newCount.new_count}`;
       }
     };
   </script>

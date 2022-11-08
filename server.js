@@ -48,19 +48,28 @@ express()
     });
 
     try {
-      const client = await pool.connect();
-      const id = req.body.id;
-      const insertSql = `INSERT INTO buttons (name)
-        VALUES (concat('Child of ', $1::text))
-        RETURNING id AS new_id;`
-      const selectSql = 'SELECT LOCALTIME;';
+      const client = await pool.connect(); // connects to postgres client
+      const id = req.body.id; // reads the id from the request in index.ejs
+      var updateSql = ``;
 
-      const insert = await client.query(insertSql, [id]);
-      const select = await client.query(selectSql);
+      // see if reset button was pressed or not
+      if (id == 3) {
+        updateSql = `UPDATE buttons
+        SET count = 0
+        WHERE id <> $1
+        RETURNING count as new_count`;
+      } else {
+        updateSql = `UPDATE buttons
+          SET count = count + 1
+          WHERE id = $1
+          RETURNING count as new_count`;
+      }
+
+      const update = await client.query(updateSql, [id]);
 
       const response = {
-        newId: insert ? insert.rows[0] : null,
-        when: select ? select.rows[0] : null
+        newCount: update ? update.rows[0] : null,
+        buttonId: id
       };
       res.json(response);
       client.release();
